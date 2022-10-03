@@ -5,8 +5,8 @@ class Post < ApplicationRecord
     validates :summary, length: {maximum: 250}
     validates :category, inclusion: {in: ["Fiction", "Non-Fiction"]} 
 
-    # validate :title, inclusion{in: ["Won't Believe","Secret","Top [number]","Guess"]}
-    custom_patterns =[
+    validate :clickbait?
+    CUSTOM_PATTERNS =[
         /Won't Believe/i,
         /Secret/i,
         /Top \d/i,
@@ -14,8 +14,9 @@ class Post < ApplicationRecord
     ]
 
     def clickbait?
-        if custom_patterns.none? {|cus| cus.match title}
-        error.add(:title, "must be clickbait")
+        if CUSTOM_PATTERNS.none? {|cus| cus.match title}
+        errors.add(:title, "must be clickbait")
         end
     end 
+
 end
